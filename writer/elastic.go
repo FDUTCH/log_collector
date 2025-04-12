@@ -35,7 +35,7 @@ func (w *ElasticWriter) Write(p []byte) (n int, err error) {
 	err = json.Unmarshal(p, &data)
 
 	if err == nil {
-		data["@timestamp"] = time.Now().Format(time.DateTime)
+		data["@timestamp"] = time.Now().Format(time.RFC3339)
 		p, _ = json.Marshal(data)
 	}
 
@@ -49,7 +49,7 @@ func (w *ElasticWriter) Write(p []byte) (n int, err error) {
 	}
 
 	w.log.Debug("written", "data", string(p))
-	
+
 	_ = resp.Body.Close()
 	return n, nil
 }
