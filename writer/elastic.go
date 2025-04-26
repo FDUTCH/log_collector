@@ -35,8 +35,11 @@ func (w *ElasticWriter) Write(p []byte) (n int, err error) {
 	err = json.Unmarshal(p, &data)
 
 	if err == nil {
-		data["@timestamp"] = time.Now().Format(time.RFC3339)
-		p, _ = json.Marshal(data)
+		_, has := data["@timestamp"]
+		if !has {
+			data["@timestamp"] = time.Now().Format(time.RFC3339)
+			p, _ = json.Marshal(data)
+		}
 	}
 
 	resp, err := esapi.IndexRequest{
